@@ -1,0 +1,31 @@
+Dokumentation 080-0001-A_Linienrechner_2023
+
+[AUSFÜHRUNG DES PROGRAMMS]
+
+"--config=PATH" als Startargument für das Programm angeben, PATH mit dem lokalen Pfad der Config ersetzen
+
+
+[CONFIG]
+
+Eine Beispielconfig ist im Projektpfad hinterlegt. Folgend werden alle Attribute in der Config erklärt
+
+spsIP: Die IP-Adresse der SPS
+CPUType: Der CPUType der SPS (S7200, S7300, S7400)
+
+configs: Array der verschiedenen Configs (Für jede Config wird ein eigener Task erstellt (ermöglicht Polling auf verschiedene Linien))
+  name: Name/Beschreibung/Identifikation der Linie
+  iniPath: Der Pfad zur Ini-Konfiguration
+  sectionName: Der Sektion-Name in der INI-Konfiguration wo die Platzhalter stehen (default: DATENCONTAINER)
+  replaceName: Der Anfangs-String der Platzhalter, welche in der XML-Datei ersetzt werden (default: ###Platzhalter###)
+  xmlTemplatePath: Der Pfad zum XML-Template, welches die Platzhalter enthält
+  xmlSavePath: Der Pfad, wo die erstellte XML-Datei abgelegt wird
+  DB: Der Datenbaustein, in welchem die Daten in der SPS liegen
+  pollDelay: Der Delay, nach welchem die SPS abgefragt wird in Milisekunden (3000 = 3sek.)
+  pollByte: Das Byte, in welchem das Pollingbit gesetzt wird
+  pollingBit: Das Bit, welches durch die SPS gesetzt wird um den Prozessstart zu signalisieren
+  reactionBit: Das Bit, welches vom Programm zum quittieren auf 1 gesetzt wird
+
+[PROGRAMMABLAUF]
+
+Wenn das Programm gestartet wird, startet der Pollvorgang. Das Programm fragt die SPS alle x Sekunden ab (pollDelay), ob das Pollingbit gesetzt wurde. Wenn das Bit gesetzt wurde, beginnt das Programm, die in der Ini-Datei definierten Daten abzufragen. Anschließend wird von dem xmlTemplate eine Kopie erstellt und die Daten werden an den jeweiligen Stellen eingetragen. Die fertige XML-Datei wird am definierten Speicherort abgelegt. Ist dieser Prozess abgeschlossen, setzt das Programm das Quittierbit auf 1. Nachdem die SPS das Pollingbit wieder auf 0 gesetzt hat, wird auch das Quittierbit wieder auf 0 gesetzt. Nun startet der Pollingvorgang von vorne.
+ 

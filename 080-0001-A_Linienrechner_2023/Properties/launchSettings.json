@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "080-0001-A_Linienrechner_2023": {
+      "commandName": "Project",
+      "commandLineArgs": "--config=D:\\data\\confignew.json"
+    }
+  }
+}
